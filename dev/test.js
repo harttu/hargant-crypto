@@ -4,7 +4,7 @@ const bitcoin = new Blockchain();
 
 console.log(bitcoin);
 
-/*
+
 const previousBlockHash = 'ASDFSADFSDF';
 const currentBlockData = [
 	{
@@ -25,16 +25,16 @@ const currentBlockData = [
 ];
 // */
 //const nonce = 100;
-//console.log(bitcoin.proofOfWork(previousBlockHash,currentBlockData));
+console.log(bitcoin.proofOfWork(previousBlockHash,currentBlockData));
 
-//console.log(bitcoin.hashBlock(previousBlockHash,currentBlockData,34806));
+console.log(bitcoin.hashBlock(previousBlockHash,currentBlockData,34806));
 
 //console.log(bitcoin.hashBlock(previousBlockHash,currentBlockData,nonce));
 
 
 
-//bitcoin.createNewBlock(123,'ASDASD','QWQWE');
-//bitcoin.createNewBlock(34,'ERTSD','YUIYUiE');
+bitcoin.createNewBlock(123,'ASDASD','QWQWE');
+bitcoin.createNewBlock(34,'ERTSD','YUIYUiE');
 /*
 bitcoin.createNewBlock(663,'XCVXCVSD','HJHJK');
 bitcoin.createNewTransaction(100,'ALEX234ASDASD','JENDFGDFGDFG');
