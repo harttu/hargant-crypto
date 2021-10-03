@@ -5,13 +5,11 @@ function Blockchain() {
 	this.chain = [];
 	this.pendingTransactions = [];
 
-	this-currentNodeUrl = currentNodeUrl;
+	this.currentNodeUrl = currentNodeUrl;
 	this.networkNodes = [];
 	// the genesis block
 	this.createNewBlock(100,'0','0'); 
 }
-
-
 
 Blockchain.prototype.createNewBlock = function(nonce, previousBlockHash,hash) {
 	const newBlock = {
