@@ -3,8 +3,9 @@ curl http://localhost:${2}/mine
 fi
 
 if [ "$1" == "TRANS_1" ]; then
-curl -X POST -i http://localhost:${2}/transaction -H "Content-Type: application/json" \
---data "{ \"amount\": $3,\"sender\": \"SENDER1\",\"recipient\": \"SENDER2\"}"
+data="{ \"amount\": $3,\"sender\": \"SENDER1\",\"recipient\": \"SENDER2\"}"
+echo "DATA is ${data}"
+curl -X POST -i -H "Content-Type: application/json" --data "{ \"amount\": $3,\"sender\": \"SENDER1\",\"recipient\": \"SENDER2\"}" http://localhost:${2}/transaction/broadcast 
 fi
 
 if [ "$1" == "REG_NODE" ]; then
@@ -12,7 +13,7 @@ curl -X POST -H "Content-Type: application/json" --data "{\"newNodeUrl\": http:/
 fi
 
 if [ "$1" == "REG_AND_BROADCAST_NODE" ]; then
-curl -X POST -H "Content-Type: application/json" --data "{\"newNodeUrl\": \"http://localhost:3004\"}" http://localhost:$2/register-and-broadcast-node/
+curl -X POST -H "Content-Type: application/json" --data "{\"newNodeUrl\": \"http://localhost:$3\"}" http://localhost:$2/register-and-broadcast-node/
 fi
 
 if [ "$1" == "REG_NODES_BULK" ]; then
