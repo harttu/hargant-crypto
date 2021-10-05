@@ -20,6 +20,14 @@ if [ "$1" == "REG_NODES_BULK" ]; then
 curl -X POST -H "Content-Type: application/json" --data "{\"allNetworkNodes\": [\"http://localhost:3004\",\"http://localhost:3005\"]}" http://localhost:$2/register-nodes-bulk/
 fi
 
+if [ "$1" == "SETUP" ]; then
+bash curlHaku.sh TRANS_1 3001 200
+bash curlHaku.sh TRANS_1 3001 700
+bash curlHaku.sh REG_AND_BROADCAST_NODE 3001 3002
+bash curlHaku.sh REG_AND_BROADCAST_NODE 3001 3003
+bash curlHaku.sh REG_AND_BROADCAST_NODE 3001 3004
+fi
+
 if [ "$1" == "GET_BC" ]; then
 curl -X GET http://localhost:$2/blockchain #> .tmp.output
 #json_pp -json_opt pretty,canonical .tmp.output

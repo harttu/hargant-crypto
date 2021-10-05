@@ -59,6 +59,38 @@ app.post('/transaction/broadcast', function(req,res) {
 
 })
 
+app.post('/receive-new-block', function(req,res) {
+	const newBlock = req.body.newBlock;
+	const lastBlock = bitcoin.getLastBlock();
+	const correctHash = lastBlock.hash === newBlock.previousBlockHash;
+	const correctIndex = lastBlock['index'] + 1 === newBlock['index'];
+	
+
+	console.dir(req.body)
+
+	console.log(bitcoin.getLastBlock.hash)
+	console.log(newBlock.previousBlockHash)
+	console.log(correctHash)
+	console.log(correctIndex)
+
+	if( correctHash && correctIndex ) {
+		bitcoin.chain.push(newBlock);
+		bitcoin.pendingTransactions = [];
+		console.log("Block OK")
+		res.json({
+			note: 'New block received and accepted',
+			newBlock: newBlock
+		});
+	} 
+	else {
+		console.log("Bad Block")
+		res.json({
+			note:'New block rejected.',
+			newBlock: newBlock
+		});
+	}
+});
+
 app.get('/mine', function(req,res) {
 	const lastBlock = bitcoin.getLastBlock();
 	const previousBlockHash = lastBlock['hash'];
@@ -73,7 +105,8 @@ app.get('/mine', function(req,res) {
 	//bitcoin.createNewTransaction(12.5, "00", "", nodeAddress);
 	
 	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
-	
+	const requestPromises = []
+
 	bitcoin.networkNodes.forEach(networkNodeUrl => {
 		const requestOptions = {
 			uri: networkNodeUrl + '/receive-new-block',
@@ -85,9 +118,10 @@ app.get('/mine', function(req,res) {
 		requestPromises.push(rp(requestOptions));
 	});
 		
-	Promise.all(requestPromises).then(data => {
+	Promise.all(requestPromises)
+	.then( data => {
 			const requestOptions = {
-				uri: bitcoin.currentNodeUrl + '/transacton/broadcast',
+				uri: bitcoin.currentNodeUrl + '/transaction/broadcast',
 				method: 'POST',
 				body: {
 					amount: 12.5,
@@ -95,18 +129,19 @@ app.get('/mine', function(req,res) {
 					recipient: nodeAddress
 				},
 				json:true
-			};
-		return( rp(requestOptions) );
-		}).then(data => {
+			}; // then
+		return rp(requestOptions);
+		})
+		.then(data => {
 			res.json({
-						note: "New block mined successfully",
+						note: "New block mined and broadcast successfully",
 						block: newBlock
 					});
 				}
-		).then( data => {
-			res.json({ note:"New block mined and broadcast successfully", block: newBlock });
-		});
-})
+		) // then
+	});
+		
+//})
 
 // incoming calls are from new nodes that wants to be registered
 app.post('/register-and-broadcast-node', function(req,res) {
